@@ -3,6 +3,8 @@
     "volume": {
       "version": "1.0",
       "name": "volume",
+      "devices": {},
+      "clients": {},
       "autoRules": {
         "description": "Do not remove! Automatic addition of rules by widget creation, automatic management"
       },

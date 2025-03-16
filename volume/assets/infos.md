@@ -1,31 +1,20 @@
-# volume
+# Plugins volume
 
-Cette page d'information que vous lisez est au format [Markdown](https://fr.wikipedia.org/wiki/Markdown).
-Markdown est le format d'écriture adopté par [GitHub](https://github.com/) pour les pages de Readme. 
-Son format d'écriture est très simple et ne nécessite aucunes connaissances particulières.
-
-Cette page a été générée automatiquement avec le plugin mais il est vivement recommandé de la modifier en documentant les fonctionnalités du plugin.
-Utilisez un fichier d'information d'un plugin existant comme exemple ou visitez le site [http://demo.showdownjs.com](http://demo.showdownjs.com) pour connaitre la syntaxe d'écriture.
-
-## Règles pour tester le plugin
-- test la commande une
-- test la commande une dans le Salon
-- test la commande une dans la Cuisine
+<div style="text-align: left; margin: 10px 0">
+<img src="../../core/plugins/volume/assets/images/github/audio.png" width="40"/></div>
 
 
-## Dans le fichier de propriétés:
-### L'objet "rules":
+### ✨ Fonctionnalité
+Le plugin Widget Volume permet simplement de controler le volume audio du serveur ou du client [A.V.A.T.A.R](https://github.com/Avatar-Home-Automation).
 
-``` json
-"rules": {
-	"test": ["test * (command|order)"]
-}
-```
+<div style="text-align: center;">
+<img src="../../core/plugins/volume/assets/images/github/volume.png" width="350"/></div>
 
-La syntaxe (command|order) permet d'avoir une reconnaissance validée avec "command" ou "order".
-Pour connaitre les possibilités d'écriture des règles, référez-vous à la documentation de développement.
+## Paramètrage
 
-Les autres objets du fichier de propriétés sont automatiquement générés pour la gestion des widgets.
-Consultez la documentation pour plus d'information.
+- Ouvrez `widget Studio`, sélectionnez le plugin volume et réglez votre widget comme ceci :
 
-<br><br><br><br>
+<div style="text-align: center;">
+<img src="../../core/plugins/volume/assets/images/github/settings.png" width="550"/></div>
+
+- Pour ajuster votre volume à la voix dites: `regle le volume à 50`
