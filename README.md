@@ -1,6 +1,6 @@
-# Plugin Volume
 
-<div align-text:"center">
+
+<div align-text:"center"># Plugin Volume
 <img src="./volume/assets/images/github/audio.png" width="80"/></div>
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/Domodom30/A.V.A.T.A.R-plugin-volume)
