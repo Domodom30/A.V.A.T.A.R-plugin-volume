@@ -1,0 +1,4 @@
+
+Control volume via widget and voice.
+
+Contrôler le volume via le widget et par la voix.
