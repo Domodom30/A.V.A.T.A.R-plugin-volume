@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' ; style-src 'self' 'unsafe-inline'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+
+    <script src="../../../../../node_modules/xel/xel.js" type="module"></script>
+    <meta name="xel-theme" content="../../../../../node_modules/xel/themes/adwaita-dark.css">
+    <meta name="xel-accent-color" content="blue">
+    <meta name="xel-icons" content="">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div id="title" class="logo"></div>
+        <div id="notification" class="notification hidden"></div>
+        <div id="close" class="close"><img src="../images/off.png"></div>
+    </header>
+
+    <main class="content">
+        <div class="container">
+            <x-card class="hidden" id="calendar-infos">
+                <x-box class="slider">
+                    <x-slider id="set-volume" value="2" step="2" ticks size="small"></x-slider>
+                </x-box>
+                <x-box class="icon-container">
+                    <x-box class="icon"><img id="set-unmute" src="../images/unmute.png"></x-box>
+                    <x-box class="icon"><img id="set-mute" src="../images/mute.png"></x-box>
+                </x-box>
+            </x-card>
+        </div>
+    </main>
+
+    <script src="./settings-renderer.js"></script>
+</body>
+
+</html>
