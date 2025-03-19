@@ -1,7 +1,14 @@
 {
   "message": {
     "title": "Réglage Volume",
-    "volume": "Volume réglé à $$",
-    "mute": "Muet"
+    "setvolume": "Volume $$ réglé à $$|Le volume $$ est maintenant réglé à $$|J'ai réglé le volume $$ à $$",
+    "setvolumeup": "J'ai augmenté le volume|J'ai augmenté le son",
+    "setvolumedown": "J'ai baissé le volume",
+    "setvolumeall": "Volume réglé sur tous les clients à $$|J'ai réglé le volume sur tous les clients à $$",
+    "nosetvolume": "Impossible de régler le volume sur ce client",
+    "setmute": "mode muet activé|j'ai coupé le son|j'ai mis en sourdine|mode sourdine activé",
+    "setunmute": "J'ai remis le son|Le son est réactivé",
+    "notifsetvolume": "Volume réglé à $$|Le volume est maintenant réglé à $$|J'ai réglé le volume à $$",
+    "novolumedefine": "Je n'ai pas entendu la valeur du volume|J'ai pas compris "
   }
 }

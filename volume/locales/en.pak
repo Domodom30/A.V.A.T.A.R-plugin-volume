@@ -1,7 +1,12 @@
 {
   "message": {
     "title": "Volume Setting",
-    "volume": "Volume to $$%",
-    "mute": "Mute"
+    "setvolume": "Volume set $$ to $$|The volume $$ is now set to $$|I set $$ the volume to $$",
+    "setvolumeall": "Volume set on all clients to $$|I set the volume on all clients to $$",
+    "nosetvolume": "Unable to set the volume on this client",
+    "setmute": "mute mode activated|I muted the sound|I put it on mute|mute mode enabled",
+    "setunmute": "I unmuted the sound|Sound is reactivated",
+    "notifsetvolume": "Volume set to $$|The volume is now set to $$|I set the volume to $$",
+    "novolumedefine": "I didn't hear the volume value|I didn't understand"
   }
 }

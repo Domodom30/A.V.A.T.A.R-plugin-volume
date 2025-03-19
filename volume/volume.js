@@ -3,13 +3,6 @@ import fs from 'fs-extra';
 import * as url from 'url';
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-/**
- * Uncomment, remove imports, methods, and other relationships below if you want to use it or not.
- */
-
-//import * as volumeLib from './lib/volume.js';
-//const volumeAPI = await volumeLib.init();
-
 import AudioController from './lib/audioController.js';
 const audio = new AudioController();
 
@@ -26,23 +19,14 @@ let currentwidgetState;
 const widgetFolder = path.resolve(__dirname, 'assets/widget');
 const widgetImgFolder = path.resolve(__dirname, 'assets/images/widget');
 
-/**
- * Saves widget positions when A.V.A.T.A.R closes (json files saved in ./asset/widget folder)
- @param {object} widgets - widgets of the plugin
- */
 export async function onClose(widgets) {
   // Save widget positions
   if (Config.modules.volume.widget.display === true) {
     await Widget.initVar(widgetFolder, widgetImgFolder, null, Config.modules.volume);
     if (widgets) await Widget.saveWidgets(widgets);
   }
-
-  // Do other stuff
 }
 
-/**
- * Executed at the loading of the plugin
- */
 export async function init() {
   if (!(await Avatar.lang.addPluginPak('volume'))) {
     return error('volume: unable to load language pak files');
@@ -67,11 +51,6 @@ export async function init() {
   return periphInfo;
 }
 
-/**
- * Searchs for existing Widgets when initializing A.V.A.T.A.R
- * Executed upon loading the plugin
- @return {object} object - the list of existing widgets (json files) saved in ./asset/widget folder
- */
 export async function getWidgetsOnLoad() {
   if (Config.modules.volume.widget.display === true) {
     await Widget.initVar(widgetFolder, widgetImgFolder, null, Config.modules.volume);
@@ -80,39 +59,14 @@ export async function getWidgetsOnLoad() {
   }
 }
 
-/**
- * Executed after all widgets are loaded in the A.V.A.T.A.R interface
- * for example, used to refresh information of a widget
- @return {none}
- */
-export async function readyToShow() {
-  // Do stuff
-}
-
-/**
- * Requested only if a widget type is 'button' 
- * returns the new button image state to display 
- * 
- @param {object} arg - button parameters
- @return {string} 
- */
 export async function getNewButtonState(arg) {
-  return currentwidgetState === true ? 'Off' : 'On';
+  return currentwidgetState === true ? 'On' : 'Off';
 }
 
-/**
- * Mandatory do not remove !
- * Returns existing widgets
- @return {object} 
- */
 export async function getPeriphInfo() {
   return periphInfo;
 }
 
-/**
- * Action performed by clicking on a widget image
- @param {object} even - button parameters
- */
 export async function widgetAction(even) {
   if (even.type !== 'button') {
     // Action for 'List of values' and 'float value' types
@@ -127,31 +81,41 @@ export async function widgetAction(even) {
 
 export async function action(data, callback) {
   try {
-    Locale = await Avatar.lang.getPak('volume', data.language);
-    if (!Locale) {
-      throw new Error(`volume: Unable to find the '${data.language}' language pak.`);
+    // Vérification de base sur data
+    if (!data || !data.action || !data.action.command) {
+      console.error('volume: action() -> données invalides:', data);
+      callback();
+      return;
     }
 
-    // Table of actions
+    // Table des actions
     const tblActions = {
-      setVolume: async () => {
-        Avatar.speak(await Lget(['message.volume'], data.action.volume), data.client, () => {
-          audio.setVolume(data.action.volume);
-        });
-      },
+      controlVolume: async () => controlVolume(data, false, 'setVolume'),
+      controlVolumeGroup: async () => controlVolume(data, true, 'setVolumeGroup'),
+      controlVolumeUnmute: async () => controlVolume(data, false, 'setUnmute'),
+      controlVolumeMute: async () => controlVolume(data, false, 'setMute'),
+      controlVolumeUp: async () => controlVolume(data, false, 'setVolumeUp'),
+      controlVolumeDown: async () => controlVolume(data, false, 'setVolumeDown'),
+
+      // Fonctions clientPlugin
+      setVolumeClient: () => audio.setVolume(data.action.volume),
+      setMuteClient: () => audio.mute(),
+      setUnuteClient: () => audio.unmute(),
+      setVolumeUpClient: () => audio.increaseVolume(5),
+      setVolumeDownClient: () => audio.decreaseVolume(5),
     };
 
-    // Writes info console
-    info('volume:', data.action.command, L.get('plugin.from'), data.client);
+    await tblActions[data.action.command]();
 
-    // Calls the function that should be run
-    tblActions[data.action.command]();
+    infoConsole(data);
+    // Trace console
+    info('volume: ', data.action.command, L.get('plugin.from'), data.client, L.get('plugin.to'), data.toClient);
   } catch (err) {
-    if (data.client) Avatar.Speech.end(data.client);
+    if (data && data.client) Avatar.Speech.end(data.client);
     if (err.message) error(err.message);
   }
 
-  // Returns callback
+  // Toujours appeler le callback à la fin
   callback();
 }
 
@@ -166,8 +130,8 @@ const openVolumeWindow = async () => {
     minimizable: false,
     alwaysOnTop: false,
     show: false,
-    width: 420,
-    height: 190,
+    width: 440,
+    height: 220,
     opacity: 1,
     icon: path.resolve(__dirname, 'assets', 'images', 'volume.png'),
     webPreferences: {
@@ -219,7 +183,7 @@ const openVolumeWindow = async () => {
 
   // returns the localized message defined in arg
   Avatar.Interface.ipcMain().handle('volume-msg', async (_event, arg) => {
-    return await Locale.get(arg);
+    return Locale.get(arg);
   });
 
   volumeWindow.on('closed', () => {
@@ -234,12 +198,115 @@ const openVolumeWindow = async () => {
   });
 };
 
-const Lget = async (target, ...args) => {
-  if (args) {
-    target = [target];
-    args.forEach((arg) => {
-      target.push(arg);
+const controlVolume = async (data, allClients, type) => {
+  const dataVolume = data.volume;
+  let tts = '';
+
+  // Vérification de dataVolume si nécessaire
+  if (type === 'setVolume' || type === 'setVolumeGroup') {
+    if (typeof dataVolume !== 'number' || isNaN(dataVolume)) {
+      Avatar.speak(Locale.get('message.novolumedefine'), data.client, () => {
+        return;
+      });
+    }
+  }
+
+  // On récupère le texte à dire selon l'action
+  switch (type) {
+    case 'setVolume':
+      tts = await Locale.get(['message.setvolume', data.toClient, dataVolume]);
+      break;
+    case 'setVolumeGroup':
+      tts = await Locale.get(['message.setvolumegroup', data.toClient, dataVolume]);
+      break;
+    case 'setVolumeUp':
+      tts = await Locale.get(['message.setvolumeup']);
+      break;
+    case 'setVolumeDown':
+      tts = await Locale.get(['message.setvolumedown']);
+      break;
+    case 'setMute':
+      tts = await Locale.get('message.setmute');
+      break;
+    case 'setUnmute':
+      tts = await Locale.get('message.setunmute');
+      break;
+    default:
+      console.error(`volume: controlVolume -> type inconnu: ${type}`);
+      return;
+  }
+
+  const executeLocalAudioAction = () => {
+    switch (type) {
+      case 'setVolume':
+        audio.setVolume(dataVolume);
+        break;
+      case 'setVolumeGroup':
+        audio.setVolume(dataVolume);
+        break;
+      case 'setVolumeUp':
+        audio.increaseVolume(Config.modules.volume.incrementVolume || 2);
+        break;
+      case 'setVolumeDown':
+        audio.decreaseVolume(Config.modules.volume.incrementVolume || 2);
+        break;
+      case 'setMute':
+        audio.mute();
+        break;
+      case 'setUnmute':
+        audio.unmute();
+        break;
+    }
+  };
+
+  // Payload distant : data complet + action modifié
+  const remotePayload = {
+    ...data,
+    action: {
+      ...data.action,
+      command: `${type}Client`,
+      ...(type === 'setVolume' || type === 'setVolumeGroup' ? { volume: dataVolume } : {}),
+    },
+  };
+
+  // Cas local ou distant
+  if (!data.action.remote) {
+    // true = sur le serveur A.V.A.T.A.R, false = sur le client qui se trouve sur la même machine que le serveur
+    const onServer = Config.modules.volume.onServer;
+
+    if (allClients) {
+      Avatar.speak(tts, data.client, () => {
+        const clients = Avatar.Socket.getClients();
+        clients.forEach((client) => {
+          if (client.is_mobile) return;
+          const sameIP = Config.http.ip === client.ip;
+          if (!onServer || !sameIP) {
+            data.action.remote = true;
+            Avatar.clientPlugin(client, 'volume', remotePayload);
+          }
+        });
+      });
+    } else {
+      const client = Avatar.getTrueClient(data.toClient);
+      const clientInfos = Avatar.Socket.getClient(client);
+
+      if (Config.http.ip === clientInfos.ip) {
+        // Exécution locale
+        Avatar.speak(tts, data.client, () => {
+          executeLocalAudioAction();
+        });
+      } else {
+        // Exécution distante sur un autre client
+        Avatar.speak(tts, data.client, () => {
+          data.action.remote = true;
+          Avatar.clientPlugin(client, 'volume', remotePayload);
+        });
+      }
+    }
+  } else {
+    // Commande distante exécutée localement après transfert
+    Avatar.speak(tts, data.client, () => {
+      executeLocalAudioAction();
     });
   }
-  return await Locale.get(target);
 };

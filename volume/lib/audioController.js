@@ -43,15 +43,20 @@ class AudioController {
   async setVolume(value) {
     await this._ensureSupported();
     const vol = Math.max(0, Math.min(100, value));
-    await loudness.setVolume(vol);
-    if (vol === 0) {
-      await this.mute(); // facultatif
+    const isMuted = await loudness.getMuted();
+    if (isMuted && vol > 0) {
+      await loudness.setMuted(false);
     }
+    await loudness.setVolume(vol);
   }
 
   async increaseVolume(step = 5) {
     await this._ensureSupported();
     const currentVolume = await loudness.getVolume();
+    const isMuted = await loudness.getMuted();
+    if (isMuted) {
+      await loudness.setMuted(false);
+    }
     await this.setVolume(currentVolume + step);
   }
 

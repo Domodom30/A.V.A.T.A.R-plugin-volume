@@ -1,11 +1,13 @@
 {
   "name": "volume",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "Plugin volume for A.V.A.T.A.R",
-  "repository": "https://github.com/Domodom30/",
+  "repository": "https://github.com/Domodom30/A.V.A.T.A.R-plugin-volume",
   "keywords": [
-    "volume"
+    "volume",
+    "avatar",
+    "audio"
   ],
   "author": "Eddy TELLIER",
   "license": "mit",
