@@ -1,12 +1,16 @@
 # Plugin Volume
 ![GitHub repo size](https://img.shields.io/github/repo-size/Domodom30/A.V.A.T.A.R-plugin-volume)
-![GitHub Release](https://img.shields.io/badge/version-1.2.0-green)
+![GitHub Release](https://img.shields.io/badge/version-1.3.0-green)
 ![GitHub Release Date](https://img.shields.io/badge/Release_Date-19_mars_2025-yellow)
 ![GitHub License](https://img.shields.io/github/license/Domodom30/A.V.A.T.A.R-plugin-volume)
 
 ### ✨ Fonctionnalité
 Le plugin Widget Volume permet simplement de controler le volume audio du serveur et des clients [A.V.A.T.A.R](https://github.com/Avatar-Home-Automation).
 
+### ✨ Fix Bugs
+
+- Corrections du bug image sur les postes clients
+  
 <div align-text:"center">
 <img src="./volume/assets/images/github/volume.png" width="440"/></div>
 

@@ -4,7 +4,7 @@ import { exec } from 'child_process';
 
 class AudioController {
   constructor() {
-    this.platform = os.platform(); // 'win32', 'darwin', 'linux'
+    this.platform = os.platform();
     this.previousVolume = null;
 
     this._checkSystemSupport();
@@ -20,87 +20,104 @@ class AudioController {
         this._checkLinuxDependencies();
         break;
       default:
-        console.warn(`OS non pris en charge : ${this.platform}. Certaines fonctionnalités risquent de ne pas fonctionner.`);
+        infoOrange(`OS non pris en charge : ${this.platform}. Certaines fonctionnalités risquent de ne pas fonctionner.`);
     }
   }
 
   _checkLinuxDependencies() {
     exec('which amixer', (error, stdout) => {
       if (error || !stdout.trim()) {
-        console.warn('Attention : "amixer" n\'est pas installé. Installez-le avec "sudo apt install alsa-utils".');
-      } else {
-        return;
+        infoOrange('Attention : "amixer" n\'est pas installé. Installez-le avec "sudo apt install alsa-utils".');
       }
     });
   }
 
+  async _ensureSupported() {
+    const supportedPlatforms = ['win32', 'darwin', 'linux'];
+    if (!supportedPlatforms.includes(this.platform)) {
+      infoOrange(`Le système d'exploitation ${this.platform} n'est pas supporté par ce contrôleur audio.`);
+    }
+  }
+
   async getVolume() {
     await this._ensureSupported();
-    const volume = await loudness.getVolume();
-    return volume;
+    return await loudness.getVolume();
   }
 
   async setVolume(value) {
     await this._ensureSupported();
-    const vol = Math.max(0, Math.min(100, value));
+
+    const volume = Math.max(0, Math.min(100, value));
     const isMuted = await loudness.getMuted();
-    if (isMuted && vol > 0) {
+
+    if (isMuted && volume > 0) {
       await loudness.setMuted(false);
     }
-    await loudness.setVolume(vol);
+
+    await loudness.setVolume(volume);
   }
 
-  async increaseVolume(step = 5) {
+  async increaseVolume(step) {
     await this._ensureSupported();
+
     const currentVolume = await loudness.getVolume();
     const isMuted = await loudness.getMuted();
+
     if (isMuted) {
       await loudness.setMuted(false);
     }
+
     await this.setVolume(currentVolume + step);
   }
 
-  async decreaseVolume(step = 5) {
+  async decreaseVolume(step) {
     await this._ensureSupported();
+
     const currentVolume = await loudness.getVolume();
     await this.setVolume(currentVolume - step);
   }
 
   async mute() {
     await this._ensureSupported();
+
     const isMuted = await loudness.getMuted();
+
     if (!isMuted) {
-      this.previousVolume = await loudness.getVolume();
+      const currentVolume = await loudness.getVolume();
+
+      if (currentVolume > 0) {
+        this.previousVolume = currentVolume;
+      }
       await loudness.setMuted(true);
-    } else {
-      return;
     }
   }
 
   async unmute() {
     await this._ensureSupported();
+
     const isMuted = await loudness.getMuted();
-    if (isMuted) {
-      await loudness.setMuted(false);
-      if (this.previousVolume !== null) {
-        await loudness.setVolume(this.previousVolume);
-      }
-    } else {
+
+    if (!isMuted) {
       return;
     }
+
+    await loudness.setMuted(false);
+
+    const currentVolume = await loudness.getVolume();
+
+    if (this.previousVolume !== null && currentVolume === 0) {
+      await loudness.setVolume(this.previousVolume);
+    } else if (currentVolume === 0) {
+      const defaultVolume = 50;
+      await loudness.setVolume(defaultVolume);
+    }
+
+    this.previousVolume = null;
   }
 
   async isMutedStatus() {
     await this._ensureSupported();
-    const muted = await loudness.getMuted();
-    return muted;
-  }
-
-  async _ensureSupported() {
-    const supportedPlatforms = ['win32', 'darwin', 'linux'];
-    if (!supportedPlatforms.includes(this.platform)) {
-      console.error(`Le système d'exploitation ${this.platform} n'est pas supporté par ce contrôleur audio.`);
-    }
+    return await loudness.getMuted();
   }
 }
 

@@ -1,69 +1,69 @@
 {
-  "modules": {
-    "volume": {
-      "version": "1.0",
-      "name": "volume",
-      "incrementVolume": 5,
-      "onServer": true,
-      "autoRules": {
-        "description": "Do not remove! Automatic addition of rules by widget creation, automatic management"
-      },
-      "intents": {
-        "single": "rules"
-      },
-      "rules": {
-        "controlVolume": [
-          "(rule|adjust|regulate|rile) * (volume|sound|audio)"
-        ],
-        "controlVolumeUnmute": [
-          "turn * sound back on",
-          "(return|put) * (volume|sound|audio)"
-        ],
-        "controlVolumeMute": [
-          "mute",
-          "* silent mode"
-        ],
-        "controlVolumeUp": [
-          "(raise|mount|up|increase) * (sound|volume|audio)"
-        ],
-        "controlVolumeDown": [
-          "(reduce|down|lower|decrease) * (sound|audio|volume)"
-        ],
-        "controlVolumeGroup": [
-          "(rule|adjust|regulate|rile) * (volume|sound|audio) * all rooms"
-        ]
-      },
-      "widget": {
-        "display": true,
-        "autoUpdate": {
-          "delay": 30,
-          "start": false
-        },
-        "font": {
-          "status": 8,
-          "title": 12,
-          "value": 10,
-          "position": "bottom"
-        },
-        "menu": {
-          "textColor": "rgba(255, 255, 255, 1)",
-          "fillColor": "rgba(107, 101, 99, 1)",
-          "activeFillColor": "rgba(56, 255, 0, 0.75)",
-          "doubleClickTime": 1500,
-          "font": 12,
-          "radius": 80,
-          "timeOut": 7000
-        },
-        "latency": 0,
-        "latency_macro": 0,
-        "opacity": 0.01,
-        "borderWidth": 5,
-        "size": 40,
-        "color": "rgba(107, 101, 99, 1)",
-        "textColor": "rgba(255, 255, 255, 1)"
-      },
-      "devTools": false,
-      "active": true
-    }
-  }
+   "modules": {
+      "volume": {
+         "version": "1.3.0",
+         "name": "volume",
+         "incrementVolume": 5,
+         "onServer": true,
+         "autoRules": {
+            "description": "Do not remove! Automatic addition of rules by widget creation, automatic management"
+         },
+         "intents": {
+            "single": "rules"
+         },
+         "rules": {
+            "controlVolume": [
+               "(rule|adjust|regulate|rile) * (volume|sound|audio)"
+            ],
+            "controlVolumeUnmute": [
+               "turn * sound back on",
+               "(return|put) * (volume|sound|audio)"
+            ],
+            "controlVolumeMute": [
+               "mute",
+               "* silent mode"
+            ],
+            "controlVolumeUp": [
+               "(raise|mount|up|increase) * (sound|volume|audio)"
+            ],
+            "controlVolumeDown": [
+               "(reduce|down|lower|decrease) * (sound|audio|volume)"
+            ],
+            "controlVolumeGroup": [
+               "(rule|adjust|regulate|rile) * (volume|sound|audio) * all rooms"
+            ]
+         },
+         "widget": {
+            "display": true,
+            "autoUpdate": {
+               "delay": 30,
+               "start": false
+            },
+            "font": {
+               "status": 8,
+               "title": 12,
+               "value": 10,
+               "position": "bottom"
+            },
+            "menu": {
+               "textColor": "rgba(255, 255, 255, 1)",
+               "fillColor": "rgba(107, 101, 99, 1)",
+               "activeFillColor": "rgba(56, 255, 0, 0.75)",
+               "doubleClickTime": 1500,
+               "font": 12,
+               "radius": 80,
+               "timeOut": 7000
+            },
+            "latency": 0,
+            "latency_macro": 0,
+            "opacity": 0.01,
+            "borderWidth": 5,
+            "size": 40,
+            "color": "rgba(107, 101, 99, 1)",
+            "textColor": "rgba(255, 255, 255, 1)"
+         },
+         "devTools": false,
+         "active": true
+      }
+   }
 }

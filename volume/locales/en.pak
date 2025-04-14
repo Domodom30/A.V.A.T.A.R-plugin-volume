@@ -1,12 +1,19 @@
 {
-  "message": {
-    "title": "Volume Setting",
-    "setvolume": "Volume set $$ to $$|The volume $$ is now set to $$|I set $$ the volume to $$",
-    "setvolumeall": "Volume set on all clients to $$|I set the volume on all clients to $$",
-    "nosetvolume": "Unable to set the volume on this client",
-    "setmute": "mute mode activated|I muted the sound|I put it on mute|mute mode enabled",
-    "setunmute": "I unmuted the sound|Sound is reactivated",
-    "notifsetvolume": "Volume set to $$|The volume is now set to $$|I set the volume to $$",
-    "novolumedefine": "I didn't hear the volume value|I didn't understand"
-  }
+   "label": {
+      "title": "Volume Settings",
+      "settings": "Settings",
+      "notes": "Volume Settings",
+      "close": "Close"
+   },
+   "message": {
+      "setvolume": "Volume $$ set to $$|The volume $$ is now set to $$|I set the volume $$ to $$",
+      "setvolumeup": "I increased the volume|I turned the sound up",
+      "setvolumedown": "I lowered the volume",
+      "setvolumeall": "Volume set on all clients to $$|I set the volume on all clients to $$",
+      "nosetvolume": "Unable to set the volume on this client",
+      "setmute": "mute mode activated|I muted the sound|I put it on mute|mute mode enabled",
+      "setunmute": "I unmuted the sound|The sound is back on",
+      "notifsetvolume": "Volume set to $$|The volume is now set to $$|I set the volume to $$",
+      "novolumedefine": "I didn't hear the volume value|I didn’t understand"
+   }
 }
